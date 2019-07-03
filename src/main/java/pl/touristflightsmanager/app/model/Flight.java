@@ -1,6 +1,7 @@
 package pl.touristflightsmanager.app.model;
 
 import lombok.*;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.util.ArrayList;

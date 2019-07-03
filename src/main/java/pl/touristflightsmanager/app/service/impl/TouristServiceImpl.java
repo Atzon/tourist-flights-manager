@@ -2,6 +2,7 @@ package pl.touristflightsmanager.app.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.touristflightsmanager.app.model.Flight;
 import pl.touristflightsmanager.app.model.Tourist;
 import pl.touristflightsmanager.app.repository.TouristRepository;
 import pl.touristflightsmanager.app.service.TouristService;
@@ -16,15 +17,26 @@ public class TouristServiceImpl implements TouristService {
 
     @Override
     public Tourist create(Tourist tourist) {
-        return null;
+        return repository.save(tourist);
     }
 
     @Override
     public Tourist getById(Long id){
-        return null;
+        return repository.getOne(id);
     }
+
+    @Override
+    public Tourist updateById(Long id, Tourist tourist) {
+        return repository.save(Tourist.builder().touristId(id).build());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
     @Override
     public List<Tourist> getAll() {
-        return null;
+        return repository.findAll();
     }
 }

@@ -1,14 +1,10 @@
 package pl.touristflightsmanager.app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.touristflightsmanager.app.model.Tourist;
 import pl.touristflightsmanager.app.service.TouristService;
 
@@ -22,27 +18,35 @@ public class TouristController {
     @Autowired
     private TouristService touristService;
 
-    @CrossOrigin(maxAge = 3600)
     @GetMapping
-    public ResponseEntity<List<Tourist>> getClassrooms() {
-        List<Tourist> touristList;
-        try {
-            touristList = touristService.getAll();
-        } catch (ResourceNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(touristList, HttpStatus.OK);
+    @CrossOrigin(maxAge = 3600)
+    public ResponseEntity<List<Tourist>> getTourists() {
+        return new ResponseEntity<>(touristService.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{touristId}")
+    @CrossOrigin(origins="*")
+    public ResponseEntity<Tourist> getTourist(@PathVariable("touristId") long touristId) {
+        return new ResponseEntity<>(touristService.getById(touristId), HttpStatus.OK);
     }
 
     @CrossOrigin(maxAge = 3600)
-    @GetMapping(value = "/{touristId}")
-    public ResponseEntity<Tourist> getClassroom(@PathVariable("touristId") long touristId) {
-        Tourist tourist;
-        try {
-            tourist = touristService.getById(touristId);
-        } catch (ResourceNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(tourist, HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<Tourist> postTourist(@RequestBody Tourist tourist) {
+        return new ResponseEntity<>(touristService.create(tourist), HttpStatus.OK);
+
+    }
+
+    @CrossOrigin(maxAge = 3600)
+    @PutMapping("/{touristId}")
+    public ResponseEntity<Tourist> putFlight(@RequestBody Tourist tourist, @PathVariable Long touristId) {
+        return new ResponseEntity<>(touristService.updateById(touristId, tourist), HttpStatus.OK);
+    }
+
+    @CrossOrigin(maxAge = 3600)
+    @DeleteMapping("/{touristId}")
+    public ResponseEntity deleteTourist(@PathVariable Long touristId) {
+        touristService.deleteById(touristId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
